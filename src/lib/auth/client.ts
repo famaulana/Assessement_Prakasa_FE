@@ -1,5 +1,8 @@
 'use client';
 
+import signIn from '@/api/auth/sign-in';
+import getUser from '@/api/user/get-user';
+
 import type { User } from '@/types/user';
 
 function generateToken(): string {
@@ -8,7 +11,7 @@ function generateToken(): string {
   return Array.from(arr, (v) => v.toString(16).padStart(2, '0')).join('');
 }
 
-const user = {
+let user = {
   id: 'USR-000',
   avatar: '/assets/avatar.png',
   firstName: 'Sofia',
@@ -42,7 +45,7 @@ class AuthClient {
 
     // We do not handle the API, so we'll just generate a token and store it in localStorage.
     const token = generateToken();
-    localStorage.setItem('custom-auth-token', token);
+    localStorage.setItem('access_token', token);
 
     return {};
   }
@@ -55,14 +58,14 @@ class AuthClient {
     const { email, password } = params;
 
     // Make API request
+    const signInResponse = await signIn(email, password);
 
-    // We do not handle the API, so we'll check if the credentials match with the hardcoded ones.
-    if (email !== 'sofia@devias.io' || password !== 'Secret1') {
-      return { error: 'Invalid credentials' };
+    if (signInResponse.code !== 0) {
+      return { error: signInResponse.info };
     }
 
-    const token = generateToken();
-    localStorage.setItem('custom-auth-token', token);
+    const token = (signInResponse.data as { access_token: string }).access_token;
+    localStorage.setItem('access_token', token);
 
     return {};
   }
@@ -76,20 +79,43 @@ class AuthClient {
   }
 
   async getUser(): Promise<{ data?: User | null; error?: string }> {
-    // Make API request
+    const token = localStorage.getItem('access_token');
 
-    // We do not handle the API, so just check if we have a token in localStorage.
-    const token = localStorage.getItem('custom-auth-token');
-
-    if (!token) {
+    if (!token || token === 'undefined') {
+      this.signOut;
       return { data: null };
     }
+
+    // Make API request
+    const getUserResponse = await getUser(token);
+
+    if (getUserResponse.code !== 0) {
+      return { error: getUserResponse.info };
+    }
+
+    const userId = getUserResponse.data as {
+      id: string;
+      email: string;
+    };
+    const userIdentity = (
+      getUserResponse.data as {
+        identity: { profile_img: string; first_name: string; last_name: string };
+      }
+    ).identity;
+
+    user = {
+      id: userId.id,
+      avatar: userIdentity.profile_img,
+      firstName: userIdentity.first_name,
+      lastName: userIdentity.last_name,
+      email: userId.email,
+    };
 
     return { data: user };
   }
 
   async signOut(): Promise<{ error?: string }> {
-    localStorage.removeItem('custom-auth-token');
+    localStorage.removeItem('access_token');
 
     return {};
   }

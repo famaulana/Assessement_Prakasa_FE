@@ -44,29 +44,12 @@ export function MainNav(): React.JSX.Element {
               onClick={(): void => {
                 setOpenNav(true);
               }}
-              sx={{ display: { lg: 'none' } }}
+              sx={{ display: { lg: 'nowne' } }}
             >
               <ListIcon />
             </IconButton>
-            <Tooltip title="Search">
-              <IconButton>
-                <MagnifyingGlassIcon />
-              </IconButton>
-            </Tooltip>
           </Stack>
           <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
-            <Tooltip title="Contacts">
-              <IconButton>
-                <UsersIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Notifications">
-              <Badge badgeContent={4} color="success" variant="dot">
-                <IconButton>
-                  <BellIcon />
-                </IconButton>
-              </Badge>
-            </Tooltip>
             <Avatar
               onClick={userPopover.handleOpen}
               ref={userPopover.anchorRef}

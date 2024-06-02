@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import Link from 'next/link';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -16,6 +17,7 @@ import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import dayjs from 'dayjs';
 
+import { paths } from '@/paths';
 import { useSelection } from '@/hooks/use-selection';
 
 function noop(): void {
@@ -27,9 +29,8 @@ export interface Customer {
   avatar: string;
   name: string;
   email: string;
-  address: { city: string; state: string; country: string; street: string };
   phone: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 interface CustomersTableProps {
@@ -75,8 +76,6 @@ export function CustomersTable({
               </TableCell>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Location</TableCell>
-              <TableCell>Phone</TableCell>
               <TableCell>Signed Up</TableCell>
             </TableRow>
           </TableHead>
@@ -101,14 +100,12 @@ export function CustomersTable({
                   <TableCell>
                     <Stack sx={{ alignItems: 'center' }} direction="row" spacing={2}>
                       <Avatar src={row.avatar} />
-                      <Typography variant="subtitle2">{row.name}</Typography>
+                      <Link href={`${paths.dashboard.accounts}/${row.id}`}>
+                        <Typography variant="subtitle2">{row.name}</Typography>
+                      </Link>
                     </Stack>
                   </TableCell>
                   <TableCell>{row.email}</TableCell>
-                  <TableCell>
-                    {row.address.city}, {row.address.state}, {row.address.country}
-                  </TableCell>
-                  <TableCell>{row.phone}</TableCell>
                   <TableCell>{dayjs(row.createdAt).format('MMM D, YYYY')}</TableCell>
                 </TableRow>
               );

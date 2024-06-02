@@ -16,7 +16,7 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps): React.JSX.Element {
   return (
     <html lang="en">
-      <body>
+      <body suppressHydrationWarning={true}>
         <LocalizationProvider>
           <UserProvider>
             <ThemeProvider>{children}</ThemeProvider>

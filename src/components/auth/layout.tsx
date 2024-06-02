@@ -44,13 +44,14 @@ export function Layout({ children }: LayoutProps): React.JSX.Element {
         <Stack spacing={3}>
           <Stack spacing={1}>
             <Typography color="inherit" sx={{ fontSize: '24px', lineHeight: '32px', textAlign: 'center' }} variant="h1">
-              Welcome to{' '}
+              Welcome to
+              <br />
               <Box component="span" sx={{ color: '#15b79e' }}>
-                Devias Kit
+                My Fortius HRIS Assessement Project
               </Box>
             </Typography>
             <Typography align="center" variant="subtitle1">
-              A professional template that comes with ready-to-use MUI components.
+              This dashboad use devias-kit for simplicity building layout and template of the dashboard.
             </Typography>
           </Stack>
           <Box sx={{ display: 'flex', justifyContent: 'center' }}>
